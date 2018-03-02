@@ -53,6 +53,10 @@ Do not be tempted to search for a key by its name using the MangoQuery. Although
 Never write chaincode that is not deterministic. It means that if I execute the chaincode in 2 or more different environments at different times, result should always be the same, like setting the value as the current time or setting a random number.
 This is because, that if the read write sets generated are not the same, the Validation System chaincode might reject it and throw an ENDORSEMENT_POLICY_FAILURE.
 
+# Be cautions when calling Other Chaincodes from your chaincode.
+
+Invoking a chaincode from another is okay when both chaincodes are on the same channel. But be aware that if it is on the other channel then you get only what the chaincode function returns (only if the current invoker has rights to access data on that channel). NO data will be committed in the other channel, even if it attempts to write some. Currently, cross channel chaincode chaincode invocation does not alter data (change writesets) on the other channel. So, it is only possible to write to one channel at a time per transaction.
+
 # Remember to Set Chaincode Execution Timeout
 
 Often it might so happen that during high load your chaincode might not complete its execution under 30s. It is a good practice to custom set your timeout as per your needs. This is goverened by the parameter in the core.yaml of the peer. You can override it by setting the environment variable in your docker compose file :
